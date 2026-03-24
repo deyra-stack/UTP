@@ -109,7 +109,8 @@ const CAT={
   "Complejo / Losa Deportiva":{color:"#1565c0",emoji:"⚽"},
   "Biblioteca":{color:"#4e342e",emoji:"📚"},
   "Centro Cultural / Comunitario":{color:"#bf360c",emoji:"🎭"},
-  "Municipalidad / Entidad Publica":{color:"#424242",emoji:"🏢"}
+  "Municipalidad / Entidad Publica":{color:"#424242",emoji:"🏢"},
+  "Etnografía":{color:"#595959",emoji:"📌"}
 };
 const PLACES=[
   {cat:"Restaurante / Cevicheria / Polleria",name:"Rinconcito Arequipeno - Los Olivos",addr:"Av. Alfredo Mendiola 3815",lat:-11.9892,lng:-77.0648,rating:"4.6",reviews:"159",phone:"+51 961 811 613",hours:"Lun-Dom 11:00-23:00",pid:"ChIJyU4iy2vPBZERqA5EYUXjrUc"},
@@ -218,7 +219,21 @@ const PLACES=[
   {cat:"Plaza / Espacio Civico",name:"Plaza Civica Los Olivos de Pro",addr:"Los Olivos",lat:-11.9507,lng:-77.0824,rating:"3.9",reviews:"386",phone:"—",hours:"Abierto 24 horas",pid:"ChIJm-O1AeHRBZERo9tDIyAwAK8"},
   {cat:"Complejo / Losa Deportiva",name:"Barsa De Los Olivos",addr:"San Fernando 198",lat:-11.9526,lng:-77.0724,rating:"4.2",reviews:"226",phone:"+51 5281309",hours:"Lun-Dom 08:00-23:30",pid:"ChIJZ51sotjRBZERdN-DmP1XHvU"}
 ];
-const map=L.map("map",{center:[-11.9875,-77.0702],zoom:15});
+const ETNO=[
+  {cat:"Etnografía",name:"El Puente",addr:"Av. Alfredo Mendiola (entre UCV y UTP)",lat:-11.9622,lng:-77.0592,note:"Papás mirando a los hijos en su primera clase. Cruza UCV y UTP.",pid:""},
+  {cat:"Etnografía",name:"Parque Lourdes",addr:"Urb. Los Olivos – cerca UTP/UCV",lat:-11.9626,lng:-77.0556,note:"Frecuentado por estudiantes que se reúnen a conversar. Algunos vecinos piden propina para no llamar al serenazgo.",pid:""},
+  {cat:"Etnografía",name:"Plaza Norte",addr:"Panamericana Norte s/n, Independencia",lat:-12.0063,lng:-77.0588,note:"Principal espacio de tiempo libre. Los jóvenes van a comer, tomar algo o pasar el tiempo.",pid:""},
+  {cat:"Etnografía",name:"Mallplaza Comas",addr:"Av. Los Ángeles, Comas",lat:-11.9363,lng:-77.0653,note:"Centro comercial de uso frecuente para tiempo no estructurado. Percibido de forma similar a otros malls.",pid:""},
+  {cat:"Etnografía",name:"Mega Plaza",addr:"Av. Alfredo Mendiola 3698, Independencia",lat:-11.9956,lng:-77.0617,note:"Centro comercial de uso frecuente para tiempo no estructurado. Los jóvenes acuden a comer y pasar el tiempo.",pid:"ChIJ2fh3NFTOBZERazeJR3n2ZJ0"},
+  {cat:"Etnografía",name:"La Curva de la Comida",addr:"Av. Alfredo Mendiola, frente UTP",lat:-11.9614,lng:-77.0600,note:"Al costado de la UTP. Lleno de menús, ploteos, etc. Comida más barata que adentro.",pid:""},
+  {cat:"Etnografía",name:"Restaurantes Parque Lourdes",addr:"Parque Lourdes, espalda de UTP",lat:-11.9631,lng:-77.0553,note:"Estudiantes van a comer menú. 'A la espalda de la UTP'.",pid:""},
+  {cat:"Etnografía",name:"El Local Huasta",addr:"Costado cancha grass sintético, Los Olivos",lat:-11.9607,lng:-77.0570,note:"Está al costado de una cancha de grass sintético. Ya se han hecho tonitos ahí.",pid:""},
+  {cat:"Etnografía",name:"La Loza Deportiva",addr:"Costado Tambo, Las Palmeras",lat:-11.9900,lng:-77.0714,note:"Al costado de Tambo. Ahí se juega. No solo gente de UTP sino de la UCV.",pid:""},
+  {cat:"Etnografía",name:"UCV – Univ. César Vallejo",addr:"Av. Alfredo Mendiola 6232, Los Olivos",lat:-11.9631,lng:-77.0601,note:"La gente va a eventos de la UCV usando códigos de amigos. Reconocen las áreas verdes y lo espacioso del campus.",pid:""},
+  {cat:"Etnografía",name:"La Casona",addr:"Av. Alfredo Mendiola 6324, San Martín de Porres",lat:-11.9528,lng:-77.0695,note:"Local Luxes Disco Club.",pid:""},
+  {cat:"Etnografía",name:"Óvalo Infantas",addr:"Óvalo Infantas, Los Olivos",lat:-11.9735,lng:-77.0599,note:"Lugar para encontrar almuerzo: chifa. Está al costado de UCSUR.",pid:""}
+];
+const map=L.map("map",{center:[-11.9617,-77.0587],zoom:15});
 L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap © CARTO",subdomains:"abcd",maxZoom:20}).addTo(map);
 const utpIcon=L.divIcon({
   html:`<div style="width:60px;height:36px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.3);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;">
@@ -226,8 +241,8 @@ const utpIcon=L.divIcon({
   </div>`,
   className:"", iconSize:[60,36], iconAnchor:[30,18]
 });
-L.marker([-11.9875,-77.0702],{icon:utpIcon,zIndexOffset:1000}).addTo(map).bindTooltip("<strong style=\"color:#4ddfb8\">UTP Lima Norte</strong><br/><small>Av. Alfredo Mendiola 6377</small>",{permanent:false,direction:"top"});
-L.circle([-11.9875,-77.0702],{radius:3000,color:"#4ddfb8",weight:1.5,fillColor:"#4ddfb8",fillOpacity:0.04,dashArray:"6 4"}).addTo(map);
+L.marker([-11.9617,-77.0587],{icon:utpIcon,zIndexOffset:1000}).addTo(map).bindTooltip("<strong style=\"color:#4ddfb8\">UTP Lima Norte</strong><br/><small>Av. Alfredo Mendiola 6377</small>",{permanent:false,direction:"top"});
+L.circle([-11.9617,-77.0587],{radius:3000,color:"#4ddfb8",weight:1.5,fillColor:"#4ddfb8",fillOpacity:0.04,dashArray:"6 4"}).addTo(map);
 const catCounts={};
 PLACES.forEach(p=>{catCounts[p.cat]=(catCounts[p.cat]||0)+1;});
 const filtersEl=document.getElementById("filters");
@@ -254,6 +269,26 @@ PLACES.forEach(p=>{
   const icon=L.divIcon({html:`<div class="custom-marker" style="background:${cfg.color}"></div>`,className:"",iconSize:[30,30],iconAnchor:[15,28]});
   const m=L.marker([p.lat,p.lng],{icon});
   m.on("click",()=>showDetail(p,m));
+  m.addTo(map);
+  markers.push({marker:m,data:p});
+});
+ETNO.forEach(p=>{
+  const icon=L.divIcon({
+    html:`<div style="width:30px;height:30px;border-radius:50%;background:#595959;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="font-size:13px;line-height:1;">📌</span></div>`,
+    className:"",iconSize:[30,30],iconAnchor:[15,15]
+  });
+  const m=L.marker([p.lat,p.lng],{icon});
+  m.on("click",()=>{
+    const cfg=CAT["Etnografía"];
+    document.getElementById("detail-cat").style.color=cfg.color;
+    document.getElementById("detail-cat").textContent="📌 Etnografía";
+    document.getElementById("detail-name").textContent=p.name;
+    document.getElementById("detail-addr").textContent=p.addr;
+    document.getElementById("detail-meta").innerHTML=`<span class="detail-item">${p.note}</span>`;
+    document.getElementById("detail-maps-link").href=p.pid?"https://www.google.com/maps/place/?q=place_id:"+p.pid:"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name+", "+p.addr);
+    document.getElementById("detail").classList.add("open");
+    map.panTo([p.lat,p.lng],{animate:true,duration:0.5});
+  });
   m.addTo(map);
   markers.push({marker:m,data:p});
 });
